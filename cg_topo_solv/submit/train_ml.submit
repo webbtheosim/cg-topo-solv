@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH --job-name=train_vae
+#SBATCH --error=../log/train_vae_%A_%a.err
+#SBATCH --output=../log/train_vae_%A_%a.out
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=32G
+#SBATCH --gres=gpu:1
+#SBATCH --array=0-29
+#SBATCH --time=24:00:00
+
+TRAIN_SCRIPT="/home/sj0161/cg_topo_solv/ml/train.py"
+LOG_DIR="../log"
+PYTHON_BIN="python3"
+CONDA_ENV="py310hoomd511"
+
+main() {
+    export PATH="${PATH}:/usr/local/nvidia/bin:/usr/local/cuda/bin"
+    module load cudatoolkit/12.6
+    module load anaconda3/2024.6
+    conda activate "$CONDA_ENV"
+
+    echo "SLURM Job ID: $SLURM_ARRAY_JOB_ID"
+    echo "SLURM Task ID: $SLURM_ARRAY_TASK_ID"
+    echo "Running on host: $(hostname)"
+
+    "$PYTHON_BIN" -u "$TRAIN_SCRIPT" --gpu_error_checking \
+        > "$LOG_DIR/train_vae_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.log"
+}
+
+main "$@"
