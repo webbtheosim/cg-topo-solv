@@ -1,0 +1,11 @@
+{
+    "xlabelsize": 10,
+    "ylabelsize": 10,
+    "xticklabelsize": 8,
+    "yticklabelsize": 8,
+    "titlesize": 11,
+    "titleweight": "bold",
+    "tickdir": "out",
+    "linewidth": 1.0,
+    "grid": "False"
+}
