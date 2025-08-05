@@ -14,6 +14,16 @@ from cg_topo_solv.ml.train import load_ml_data, train_vae
 from cg_topo_solv.ml.vae import get_spec, latent_model
 
 
+################ USER CAN ADJUST DIR ################
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parents[2]
+WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
+ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+VISCO_DATA_DIR = BASE_DIR / "mpcd" / "result_1106"
+################ USER CAN ADJUST DIR ################
+
+
 class Args:
     def __init__(self):
         self.lr = 1e-3
@@ -21,11 +31,10 @@ class Args:
         self.rw = 10.0
         self.cw = 10.0
         self.max_lambda = 0.5
-        self.DATA_DIR = "/scratch/gpfs/sj0161/topo_data/"
-        self.VISCO_DATA_DIR = "/scratch/gpfs/sj0161/mpcd/result_1106/"
-        self.WEIGHT_DIR = "/scratch/gpfs/sj0161/mpcd_ml_weight/"
-        self.ANALYSIS_DIR = "/scratch/gpfs/sj0161/mpcd_ml_analysis/"
-        self.DATA_FILE = "/scratch/gpfs/sj0161/mpcd/data_ml/data_aug20.pickle"
+        self.VISCO_DATA_DIR = VISCO_DATA_DIR
+        self.WEIGHT_DIR = ANALYSIS_DIR
+        self.ANALYSIS_DIR = ANALYSIS_DIR
+        self.DATA_FILE = DATA_FILE
 
 
 def maximin(domain, size, seed):

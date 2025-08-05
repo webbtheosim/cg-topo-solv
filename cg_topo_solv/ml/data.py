@@ -5,7 +5,16 @@ import scipy.integrate as integrate
 from sklearn.preprocessing import StandardScaler, LabelEncoder, MinMaxScaler
 from sklearn.model_selection import StratifiedKFold
 
-TOPORG1342_FILE = "/scratch/gpfs/sj0161/topo_data/rg2.pickle"
+################ USER CAN ADJUST DIR ################
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parents[2]
+WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
+ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+VISCO_DATA_DIR = BASE_DIR / "mpcd" / "result_1106"
+TOPORG1342_FILE = BASE_DIR / "topo_data" / "rg2.pickle"
+################ USER CAN ADJUST DIR ################
+
 
 def ashbaugh(r, epsilon, sigma, lam):
     """ Ashbaugh potential """

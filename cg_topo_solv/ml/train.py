@@ -6,10 +6,13 @@ import os
 import itertools
 from tensorflow.keras import backend as K
 
-DATA_DIR     = "/scratch/gpfs/sj0161/topo_data/"
-WEIGHT_DIR   = "/scratch/gpfs/sj0161/mpcd_ml_weight/"
-ANALYSIS_DIR = "/scratch/gpfs/sj0161/mpcd_ml_analysis/"
-DATA_FILE    = "/scratch/gpfs/sj0161/mpcd/data_ml/data_aug20.pickle"
+################ USER CAN ADJUST DIR ################
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parents[2]
+WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
+ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+################ USER CAN ADJUST DIR ################
 
 
 class Args:

@@ -4,7 +4,6 @@ from glob import glob
 import os
 import re
 
-import networkx as nx
 import random
 from scipy.optimize import curve_fit
 

@@ -17,28 +17,36 @@ from cg_topo_solv.ml.train import train_vae
 from cg_topo_solv.ml.vae import get_file_names
 from cg_topo_solv.bo.propose import target_value, whats_next
 
+
+################ USER CAN ADJUST DIR ################
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parents[2]
+WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
+ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+VISCO_DATA_DIR = BASE_DIR / "mpcd" / "result_1106"
+################ USER CAN ADJUST DIR ################
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Run VAE training and BO sampling for copolymer design.")
-
-    parser.add_argument("--job_iter", type=int, required=True, help="Iteration of the current job.")
-    parser.add_argument("--iteration", type=int, default=1, help="AL iteration number.")
-    parser.add_argument("--mode", type=str, default="al", help="Optimization mode ('al' or other).")
-    parser.add_argument("--rerun", action="store_true", help="Force rerun even if output exists.")
-    parser.add_argument("--scratch_dir", type=str, default="/scratch/gpfs/sj0161/", help="Base scratch directory.")
-    parser.add_argument("--home_dir", type=str, default="/home/sj0161/", help="Base home directory.")
-    parser.add_argument("--weight_dir", type=str, default="/scratch/gpfs/sj0161/mpcd_ml_weight/", help="Model weight directory.")
-    parser.add_argument("--figure_dir", type=str, default="/home/sj0161/mpcd_figure/", help="Directory to save output figures.")
-    parser.add_argument("--ml_data", type=str, default="/scratch/gpfs/sj0161/mpcd/data_ml/data_aug20.pickle", help="Path to ML training data pickle.")
-
+    parser.add_argument("--job_iter", type=int, required=True)
+    parser.add_argument("--iteration", type=int, default=1)
+    parser.add_argument("--mode", type=str, default="al")
+    parser.add_argument("--rerun", action="store_true")
+    parser.add_argument("--scratch_dir", type=str, default="/scratch/")
+    parser.add_argument("--home_dir", type=str, default="/home/")
+    parser.add_argument("--weight_dir", type=str, default=str(WEIGHT_DIR))
+    parser.add_argument("--figure_dir", type=str, default=str(BASE_DIR / "mpcd_figure"))
+    parser.add_argument("--ml_data", type=str, default=str(DATA_FILE))
     return parser.parse_args()
 
 
 def main(job_index, mode="al", iteration=1, rerun=False,
-         SCRATCH_DIR="/scratch/gpfs/sj0161/",
-         HOME_DIR="/home/sj0161/",
-         WEIGHT_DIR="/scratch/gpfs/sj0161/mpcd_ml_weight/",
-         FIGURE_DIR="/home/sj0161/mpcd_figure/",
-         ML_DATA="/scratch/gpfs/sj0161/mpcd/data_ml/data_aug20.pickle"):
+         SCRATCH_DIR="/scratch/",
+         HOME_DIR="/home/",
+         WEIGHT_DIR=str(WEIGHT_DIR),
+         FIGURE_DIR=str(BASE_DIR / "mpcd_figure"),
+         ML_DATA=str(DATA_FILE)):
     """Main driver for AL iteration, training, sampling, and batch result aggregation."""
 
     RESULT_DIR = os.path.join(HOME_DIR, "mpcd_result")

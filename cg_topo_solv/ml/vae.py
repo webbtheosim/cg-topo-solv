@@ -13,8 +13,17 @@ from tensorflow.keras import backend as K
 from tensorflow.keras.utils import to_categorical
 from spektral.layers import GINConvBatch
 
+################ USER CAN ADJUST DIR ################
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parents[2]
+WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
+ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+VISCO_DATA_DIR = BASE_DIR / "mpcd" / "result_1106"
+################ USER CAN ADJUST DIR ################
+
 LATENT_DIM = 8
-WEIGHT_DIR = '/scratch/gpfs/sj0161/mpcd_ml_weight/' 
+
 
 class Sampling(layers.Layer):
     def __init__(self, seed=None, **kwargs):
