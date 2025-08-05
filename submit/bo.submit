@@ -1,0 +1,35 @@
+#!/bin/bash
+#SBATCH --job-name=bo_propose
+#SBATCH --error=../log/bo_%A_%a.err
+#SBATCH --output=../log/bo_%A_%a.out
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=32G
+##SBATCH --gres=gpu:1
+#SBATCH --array=0-29
+#SBATCH --time=01:01:00
+
+TRAIN_SCRIPT="/home/sj0161/cg_topo_solv/bo/run_bo.py"
+CONDA_ENV="py310hoomd511"
+
+setup_environment() {
+    export PATH="/usr/local/nvidia/bin:/usr/local/cuda/bin:$PATH"
+    module purge
+    module load anaconda3/2023.3
+    conda activate "$CONDA_ENV"
+}
+
+log_info() {
+    echo "Job ID: $SLURM_ARRAY_JOB_ID"
+    echo "Task ID: $SLURM_ARRAY_TASK_ID"
+    echo "Host: $(hostname)"
+}
+
+main() {
+    setup_environment
+    log_info
+    python3 -u "$TRAIN_SCRIPT"
+}
+
+main "$@"
