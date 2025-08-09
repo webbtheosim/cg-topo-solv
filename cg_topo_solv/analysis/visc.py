@@ -184,7 +184,7 @@ def calc_viscosity(data_dir, meta, num_samples=100, size=120, valid_moments=[], 
             position = np.linspace(-59.7, 59.7, 200)
             
             velocity = np.load(velocity_path)
-            velocity_mean = velocity[1:].mean(axis=0)
+            velocity_mean = velocity[int(len(velocity)/2):].mean(axis=0)
             velocity = np.stack((position, velocity_mean), axis=1)
 
         if momentum is None or velocity is None:
