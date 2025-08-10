@@ -10,7 +10,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parents[2]
 WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
 ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
-DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug10.pickle"
 VISCO_DATA_DIR = BASE_DIR / "mpcd" / "result_1106"
 TOPORG1342_FILE = BASE_DIR / "topo_data" / "rg2.pickle"
 ################ USER CAN ADJUST DIR ################
@@ -21,14 +21,14 @@ def ashbaugh(r, epsilon, sigma, lam):
     xi = sigma / r
 
     if r <= 2 ** (1 / 6):
-        return (1 / 6) * (xi**12 - xi**6) + (1 - lam) * epsilon
+        return 4 * epsilon * (xi**12 - xi**6) + (1 - lam) * epsilon
     else:
         return 4 * epsilon * (xi**12 - xi**6) * lam
 
 
 def ashbaugh_integrand(r, epsilon, sigma, beta, lam):
     """ Integrand of Ashbaugh potential """
-    return (np.exp(-beta * ashbaugh(r, epsilon, sigma, lam)) - 1) * r**2
+    return (1- np.exp(-beta * ashbaugh(r, epsilon, sigma, lam))) * r**2
 
 
 def calculate_b2(lam):
@@ -38,19 +38,19 @@ def calculate_b2(lam):
     epsilon = 1.0
     sigma = 1.0
     result, error = integrate.quad(
-        ashbaugh_integrand, 0, 2.5, args=(epsilon, sigma, beta, lam)
+        ashbaugh_integrand, 0, np.inf, args=(epsilon, sigma, beta, lam)
     )
-    B2 = -2 * np.pi * result
+    B2 = 2 * np.pi * result
     return B2
 
 
 def extract_descriptors(graph_list, lam):
-    """ Extract B2 descriptors """
+    """ Extract chain virial coefficient """
     descriptors = []
     for g, lam_temp in zip(graph_list, lam):
         num_nodes = g.number_of_nodes()
-        B2_temp = calculate_b2(lam_temp) * num_nodes
-        descriptors.append(B2_temp)
+        Xi_temp = calculate_b2(lam_temp) * num_nodes
+        descriptors.append(Xi_temp)
     return np.array(descriptors)
 
 
@@ -59,7 +59,7 @@ def load_data(
     fold,
     n_fold=5,
     n_repeat=5,
-    if_validation=False,
+    if_validation=True,
     verbose=False,
     rerun=False,
     max_lambda=0.5,
@@ -163,9 +163,9 @@ def load_data(
         nnode_valid = l_valid[:, 0]
         nnode_test = l_test[:, 0]
 
-        b2_train = extract_descriptors(graph_train, lam_train)
-        b2_valid = extract_descriptors(graph_valid, lam_valid)
-        b2_test = extract_descriptors(graph_test, lam_test)
+        xi_train = extract_descriptors(graph_train, lam_train)
+        xi_valid = extract_descriptors(graph_valid, lam_valid)
+        xi_test = extract_descriptors(graph_test, lam_test)
 
         l_train = np.concatenate([l_train, lam_train[..., None]], axis=1)
         l_valid = np.concatenate([l_valid, lam_valid[..., None]], axis=1)
@@ -175,7 +175,7 @@ def load_data(
             [
                 y_train[..., None],
                 nnode_train[..., None],
-                b2_train[..., None],
+                xi_train[..., None],
                 lam_train[..., None],
             ],
             axis=1,
@@ -185,7 +185,7 @@ def load_data(
             [
                 y_valid[..., None],
                 nnode_valid[..., None],
-                b2_valid[..., None],
+                xi_valid[..., None],
                 lam_valid[..., None],
             ],
             axis=1,
@@ -195,7 +195,7 @@ def load_data(
             [
                 y_test[..., None],
                 nnode_test[..., None],
-                b2_test[..., None],
+                xi_test[..., None],
                 lam_test[..., None],
             ],
             axis=1,

@@ -15,10 +15,10 @@ from spektral.layers import GINConvBatch
 
 ################ USER CAN ADJUST DIR ################
 from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = Path("/scratch/gpfs/sj0161/")
 WEIGHT_DIR = BASE_DIR / "mpcd_ml_weight"
 ANALYSIS_DIR = BASE_DIR / "mpcd_ml_analysis"
-DATA_FILE = BASE_DIR / "data_ml" / "data_aug20.pickle"
+DATA_FILE = BASE_DIR / "data_ml" / "data_aug10.pickle"
 VISCO_DATA_DIR = BASE_DIR / "mpcd" / "result_1106"
 ################ USER CAN ADJUST DIR ################
 
