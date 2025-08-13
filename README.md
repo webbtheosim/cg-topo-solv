@@ -57,7 +57,7 @@ Slurm job submission scripts for HPC clusters.
 
 ## Download Data and Results
 
-Please download [data]
+Please download [data](https://doi.org/10.5281/zenodo.16696725) and result files using the following command.
 
 ```console
 $ conda activate py310hoomd511
